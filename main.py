@@ -9,6 +9,7 @@ if __name__ == "__main__":
     map_name = input("Enter Zabbix name for future map: ")
     network_user_name = input("Enter network admin user to access switches\\\\routers: ")
     network_user_password = input("Enter network admin user's password: ")
+    netowrk_domain = input("Enter network domain (for example .comp.local): ")
 
 
     if connected := zabbix_interaction.connect_to_Zabbix(zabbix_url,
@@ -29,7 +30,8 @@ if __name__ == "__main__":
         # add corresponding element ids to discovered hosts
         excess_topology = network_interaction.net_connection(discovered_hosts,
                                                              network_user_name,
-                                                             network_user_password)  # gather neighbor info from network devices
+                                                             network_user_password,
+                                                             netowrk_domain)  # gather neighbor info from network devices
         real_links = zabbix_interaction.topo_links(excess_topology,
                                                    hosts_with_elementid)
         # get from gathered info links needed to add on the map

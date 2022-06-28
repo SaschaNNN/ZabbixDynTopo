@@ -3,7 +3,7 @@ from scrapli.exceptions import ScrapliException
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
-def single_net_connection(hostname, username, password):
+def single_net_connection(hostname, username, password, netowrk_domain):
     """
     That function connects to a network device thru ssh
 
@@ -25,7 +25,7 @@ def single_net_connection(hostname, username, password):
         with Scrapli(**connection_params) as ssh:
             sh_cdp_nei = ssh.send_command('show cdp neighbors')
             for nei in sh_cdp_nei.textfsm_parse_output():
-                if '.tech.invalid' in nei["neighbor"]:
+                if netowrk_domain in nei["neighbor"]:
                     host_nei[hostname].append(
                     (nei['neighbor'].lower(),
                     hostname.split('.')[0] + ' - ' +
@@ -40,7 +40,7 @@ def single_net_connection(hostname, username, password):
     return host_nei
 
 
-def net_connection(hostips, username, password):
+def net_connection(hostips, username, password, netowrk_domain):
     """
     Multithreading connection to a pool of devices to gather neighbor information
     'show cdp neighbors'
@@ -54,7 +54,7 @@ def net_connection(hostips, username, password):
     nei_dicts = []
     with ThreadPoolExecutor(max_workers=20) as exe:
         for host in hostips:
-            future = exe.submit(single_net_connection, host['name'], username, password)
+            future = exe.submit(single_net_connection, host['name'], username, password, netowrk_domain)
             future_list.append(future)
         for f in as_completed(future_list):
             nei_dicts.append(f.result())
