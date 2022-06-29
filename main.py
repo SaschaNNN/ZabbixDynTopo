@@ -9,7 +9,7 @@ if __name__ == "__main__":
     map_name = input("Enter Zabbix name for future map: ")
     network_user_name = input("Enter network admin user to access switches\\\\routers: ")
     network_user_password = input("Enter network admin user's password: ")
-    netowrk_domain = input("Enter network domain (for example .comp.local): ")
+    netowrk_domain = input("Enter network domain (for example .corpnet.local): ")
 
 
     if connected := zabbix_interaction.connect_to_Zabbix(zabbix_url,
